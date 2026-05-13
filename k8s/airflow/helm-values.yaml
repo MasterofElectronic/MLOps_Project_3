@@ -1,7 +1,12 @@
 # Executor
 executor: LocalExecutor
 
-# Sin imagen personalizada — usamos la oficial de Airflow 3.2.0
+images:
+  airflow:
+    repository: apache/airflow
+    tag: 2.9.1
+
+# Sin imagen personalizada — usamos la oficial de Airflow 2.9.1 stable
 extraPipPackages:
   - "apache-airflow-providers-postgres==5.10.0"
   - "psycopg2-binary==2.9.9"
@@ -19,7 +24,7 @@ data:
   metadataConnection:
     user: mlops
     pass: mlops2026
-    host: postgres-svc.mlops.svc.cluster.local
+    host: postgres-svc.ingesta.svc.cluster.local
     port: 5432
     db: airflow_metadata
     protocol: postgresql
@@ -39,10 +44,10 @@ webserver:
   resources:
     requests:
       cpu: 250m
-      memory: 512Mi
+      memory: 1Gi
     limits:
       cpu: 1000m
-      memory: 1Gi
+      memory: 2Gi
   service:
     type: NodePort
 
@@ -61,7 +66,7 @@ scheduler:
 dags:
   persistence:
     enabled: true
-    storageClassName: local-path
+    storageClassName: hostpath
     size: 2Gi
     accessMode: ReadWriteOnce
 
@@ -73,9 +78,9 @@ logs:
 # Variables de entorno globales
 env:
   - name: MLFLOW_TRACKING_URI
-    value: "http://mlflow-svc.mlops.svc.cluster.local:5000"
+    value: "http://mlflow-svc.mlflow.svc.cluster.local:5000"
   - name: MLFLOW_S3_ENDPOINT_URL
-    value: "http://minio-svc.mlops.svc.cluster.local:9000"
+    value: "http://minio-svc.ingesta.svc.cluster.local:9000"
   - name: AWS_ACCESS_KEY_ID
     value: "minioadmin"
   - name: AWS_SECRET_ACCESS_KEY

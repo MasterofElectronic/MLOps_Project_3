@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: diabetes-ui
-  namespace: mlops
+  namespace: inference
 spec:
   replicas: 1
   selector:

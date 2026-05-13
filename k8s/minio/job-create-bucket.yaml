@@ -2,7 +2,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: minio-create-bucket
-  namespace: mlops
+  namespace: ingesta
 spec:
   template:
     spec:

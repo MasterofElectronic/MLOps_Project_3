@@ -2,13 +2,19 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: postgres-init
-  namespace: mlops
+  namespace: ingesta
 data:
   init.sql: |
     -- Base de datos para mlflow (si no existe)
     SELECT 'CREATE DATABASE mlflow_backend'
     WHERE NOT EXISTS (
       SELECT FROM pg_database WHERE datname = 'mlflow_backend'
+    )\gexec
+
+    -- Base de datos para airflow (si no existe)
+    SELECT 'CREATE DATABASE airflow_metadata'
+    WHERE NOT EXISTS (
+      SELECT FROM pg_database WHERE datname = 'airflow_metadata'
     )\gexec
 
     -- Conectar a mlops y crear schemas/tablas
